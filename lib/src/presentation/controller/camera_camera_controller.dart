@@ -12,7 +12,7 @@ class CameraCameraController {
   CameraDescription cameraDescription;
   CameraMode cameraMode;
   List<FlashMode> flashModes;
-  void Function(String path) onPath;
+  void Function(XFile path) onPath;
   bool enableAudio;
 
   late CameraController _controller;
@@ -180,7 +180,7 @@ class CameraCameraController {
           !_controller.value.isTakingPicture) {
         final file = await _controller.takePicture();
 
-        onPath(file.path);
+        onPath(file);
       }
     } catch (e) {
       print(e);

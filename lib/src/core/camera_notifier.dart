@@ -9,7 +9,7 @@ import 'camera_status.dart';
 
 class CameraNotifier extends ChangeNotifier {
   CameraService service;
-  void Function(String value) onPath;
+  void Function(XFile value) onPath;
   CameraSide cameraSide;
   List<FlashMode> flashModes;
   CameraCameraController? _cameraController;

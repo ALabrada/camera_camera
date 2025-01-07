@@ -15,7 +15,7 @@ class CameraCamera extends StatefulWidget {
   final ResolutionPreset resolutionPreset;
 
   ///CallBack function returns File your photo taken
-  final void Function(File file) onFile;
+  final void Function(XFile file) onFile;
 
   ///Define types of camera side is enabled
   final CameraSide cameraSide;
@@ -52,7 +52,7 @@ class _CameraCameraState extends State<CameraCamera> {
   late CameraNotifier controller = CameraNotifier(
     flashModes: widget.flashModes,
     service: CameraServiceImpl(),
-    onPath: (path) => widget.onFile(File(path)),
+    onPath: (path) => widget.onFile(path),
     cameraSide: widget.cameraSide,
     enableAudio: widget.enableAudio,
     mode: widget.mode,
