@@ -5,6 +5,7 @@ import 'package:camera_camera/src/core/camera_notifier.dart';
 import 'package:camera_camera/src/core/camera_service.dart';
 import 'package:camera_camera/src/core/camera_status.dart';
 import 'package:camera_camera/src/presentation/widgets/camera_preview.dart';
+import 'package:camera_camera/src/presentation/widgets/rotated_container.dart';
 import 'package:camera_camera/src/shared/entities/camera_mode.dart';
 import 'package:camera_camera/src/shared/entities/camera_side.dart';
 import 'package:flutter/foundation.dart';
@@ -16,6 +17,9 @@ class CameraCamera extends StatefulWidget {
 
   ///CallBack function returns File your photo taken
   final void Function(XFile file) onFile;
+
+  /// CallBack function notifies change of camera
+  final ValueChanged<CameraDescription>? onChangeCamera;
 
   ///Define types of camera side is enabled
   final CameraSide cameraSide;
@@ -30,18 +34,27 @@ class CameraCamera extends StatefulWidget {
   ///permission on Android
   final bool enableAudio;
 
-  //You can define your prefered aspect ratio, 1:1, 16:9, 4:3 or full screen
+  ///You can define your prefered aspect ratio, 1:1, 16:9, 4:3 or full screen
   final CameraMode mode;
+
+  ///The icon of the button for taking pictures
+  final Widget? triggerIcon;
+
+  ///The icon for changing the camera
+  final Widget? changeCameraIcon;
 
   CameraCamera({
     Key? key,
     this.resolutionPreset = ResolutionPreset.ultraHigh,
     required this.onFile,
+    this.onChangeCamera,
     this.cameraSide = CameraSide.all,
     this.flashModes = FlashMode.values,
     this.mode = CameraMode.ratio16s9,
     this.enableZoom = true,
     this.enableAudio = false,
+    this.triggerIcon,
+    this.changeCameraIcon,
   }) : super(key: key);
 
   @override
@@ -53,6 +66,7 @@ class _CameraCameraState extends State<CameraCamera> {
     flashModes: widget.flashModes,
     service: CameraServiceImpl(),
     onPath: (path) => widget.onFile(path),
+    onChangeCamera: widget.onChangeCamera,
     cameraSide: widget.cameraSide,
     enableAudio: widget.enableAudio,
     mode: widget.mode,
@@ -80,12 +94,18 @@ class _CameraCameraState extends State<CameraCamera> {
 
   Widget getIconByPlatform() {
     if (kIsWeb) {
-      return Icon(Icons.flip_camera_android);
+      return Icon(Icons.flip_camera_android,
+        color: Colors.white,
+      );
     }
     if (Platform.isAndroid) {
-      return Icon(Icons.flip_camera_android);
+      return Icon(Icons.flip_camera_android,
+        color: Colors.white,
+      );
     } else {
-      return Icon(Icons.flip_camera_ios);
+      return Icon(Icons.flip_camera_ios,
+        color: Colors.white,
+      );
     }
   }
 
@@ -103,22 +123,21 @@ class _CameraCameraState extends State<CameraCamera> {
                         enableZoom: widget.enableZoom,
                         key: UniqueKey(),
                         controller: controller,
+                        triggerIcon: widget.triggerIcon,
                       ),
                       if (this.controller.status.preview.cameras.length > 1)
-                        Align(
+                        RotatedContainer(
                           alignment: Alignment.bottomRight,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.only(bottom: 32, right: 64),
-                            child: InkWell(
-                              onTap: () {
-                                this.controller.changeCamera();
-                              },
-                              child: CircleAvatar(
-                                radius: 20,
-                                backgroundColor: Colors.black.withOpacity(0.6),
-                                child: getIconByPlatform(),
-                              ),
+                          padding:
+                          const EdgeInsets.only(bottom: 32, right: 64),
+                          child: InkWell(
+                            onTap: () {
+                              this.controller.changeCamera();
+                            },
+                            child: widget.changeCameraIcon ?? CircleAvatar(
+                              radius: 20,
+                              backgroundColor: Colors.black.withOpacity(0.6),
+                              child: getIconByPlatform(),
                             ),
                           ),
                         )

@@ -10,6 +10,7 @@ import 'camera_status.dart';
 class CameraNotifier extends ChangeNotifier {
   CameraService service;
   void Function(XFile value) onPath;
+  ValueChanged<CameraDescription>? onChangeCamera;
   CameraSide cameraSide;
   List<FlashMode> flashModes;
   CameraCameraController? _cameraController;
@@ -19,6 +20,7 @@ class CameraNotifier extends ChangeNotifier {
   CameraNotifier({
     required this.service,
     required this.onPath,
+    required this.onChangeCamera,
     required this.cameraSide,
     required this.flashModes,
     required this.mode,
@@ -68,6 +70,7 @@ class CameraNotifier extends ChangeNotifier {
     if (status is CameraStatusSuccess) {
       final cameras = status.success.cameras;
       status = CameraStatusSelected(cameras: cameras, indexSelected: 0);
+      onChangeCamera?.call(cameras[0]);
     } else if (status is CameraStatusPreview) {
       final cameras = status.preview.cameras;
       final index = status.preview.indexSelected;
@@ -77,6 +80,7 @@ class CameraNotifier extends ChangeNotifier {
       }
       status = CameraStatusSelected(
           cameras: cameras, indexSelected: specificIndex ?? indexSelected);
+      onChangeCamera?.call(cameras[specificIndex ?? indexSelected]);
     } else {
       throw "CAMERA_CAMERA ERROR: Invalid changeCamera";
     }

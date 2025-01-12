@@ -1,5 +1,6 @@
 import 'package:camera_camera/src/presentation/controller/camera_camera_controller.dart';
 import 'package:camera_camera/src/presentation/controller/camera_camera_status.dart';
+import 'package:camera_camera/src/presentation/widgets/rotated_container.dart';
 import 'package:camera_camera/src/shared/entities/camera_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,11 +9,13 @@ class CameraCameraPreview extends StatefulWidget {
   final void Function(String value)? onFile;
   final CameraCameraController controller;
   final bool enableZoom;
+  final Widget? triggerIcon;
   CameraCameraPreview({
     Key? key,
     this.onFile,
     required this.controller,
     required this.enableZoom,
+    required this.triggerIcon,
   }) : super(key: key);
 
   @override
@@ -61,10 +64,9 @@ class _CameraCameraPreviewState extends State<CameraCameraPreview> {
                       ),
                     ],
                     if (camera.zoom != null && widget.enableZoom)
-                      Positioned(
-                        bottom: 116,
-                        left: 0.0,
-                        right: 0.0,
+                      RotatedContainer(
+                        alignment: Alignment.bottomCenter,
+                        padding: EdgeInsets.only(bottom: 116),
                         child: CircleAvatar(
                           radius: 20,
                           backgroundColor: Colors.black.withOpacity(0.6),
@@ -83,37 +85,33 @@ class _CameraCameraPreviewState extends State<CameraCameraPreview> {
                         ),
                       ),
                     if (widget.controller.flashModes.length > 1)
-                      Align(
+                      RotatedContainer(
                         alignment: Alignment.bottomLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 32, left: 64),
-                          child: CircleAvatar(
-                            radius: 20,
-                            backgroundColor: Colors.black.withOpacity(0.6),
-                            child: IconButton(
-                              onPressed: () {
-                                widget.controller.changeFlashMode();
-                              },
-                              icon: Icon(
-                                camera.flashModeIcon,
-                                color: Colors.white,
-                              ),
+                        padding: const EdgeInsets.only(bottom: 32, left: 64),
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.black.withOpacity(0.6),
+                          child: IconButton(
+                            onPressed: () {
+                              widget.controller.changeFlashMode();
+                            },
+                            icon: Icon(
+                              camera.flashModeIcon,
+                              color: Colors.white,
                             ),
                           ),
                         ),
                       ),
-                    Align(
+                    RotatedContainer(
                       alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 32),
-                        child: InkWell(
-                          onTap: () {
-                            widget.controller.takePhoto();
-                          },
-                          child: CircleAvatar(
-                            radius: 30,
-                            backgroundColor: Colors.white,
-                          ),
+                      padding: const EdgeInsets.only(bottom: 32),
+                      child: InkWell(
+                        onTap: () {
+                          widget.controller.takePhoto();
+                        },
+                        child: widget.triggerIcon ?? CircleAvatar(
+                          radius: 30,
+                          backgroundColor: Colors.white,
                         ),
                       ),
                     ),
@@ -129,11 +127,4 @@ class _CameraCameraPreviewState extends State<CameraCameraPreview> {
               )),
     );
   }
-
-  Map<DeviceOrientation, int> turns = {
-    DeviceOrientation.portraitUp: 0,
-    DeviceOrientation.landscapeRight: 1,
-    DeviceOrientation.portraitDown: 2,
-    DeviceOrientation.landscapeLeft: 3,
-  };
 }
