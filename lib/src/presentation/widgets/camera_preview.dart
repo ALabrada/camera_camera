@@ -3,7 +3,6 @@ import 'package:camera_camera/src/presentation/controller/camera_camera_status.d
 import 'package:camera_camera/src/presentation/widgets/rotated_container.dart';
 import 'package:camera_camera/src/shared/entities/camera_mode.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../../camera_camera.dart';
 
