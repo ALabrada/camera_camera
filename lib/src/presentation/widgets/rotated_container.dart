@@ -23,7 +23,6 @@ class RotatedContainer extends StatelessWidget {
     return NativeDeviceOrientationReader(
       builder: (context) {
         final orientation = NativeDeviceOrientationReader.orientation(context);
-        print('[KK] orientation: $orientation -> ${turns[orientation]}');
         return _buildContainer(context, turns[orientation]);
       },
     );

@@ -5,6 +5,8 @@ import 'package:camera_camera/src/shared/entities/camera_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../camera_camera.dart';
+
 class CameraCameraPreview extends StatefulWidget {
   final void Function(String value)? onFile;
   final CameraCameraController controller;
@@ -54,12 +56,16 @@ class _CameraCameraPreviewState extends State<CameraCameraPreview> {
                           maxHeight: size.height,
                           maxWidth:
                               size.width * (widget.controller.aspectRatio),
-                          child: widget.controller.buildPreview()),
+                          child: RotatedView(
+                            child: widget.controller.buildPreview()),
+                          ),
                     ] else ...[
                       Center(
-                        child: AspectRatio(
-                          aspectRatio: widget.controller.cameraMode.value,
-                          child: widget.controller.buildPreview(),
+                        child: RotatedView(
+                          child: AspectRatio(
+                            aspectRatio: widget.controller.cameraMode.value,
+                            child: widget.controller.buildPreview(),
+                          ),
                         ),
                       ),
                     ],

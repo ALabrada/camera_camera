@@ -66,6 +66,7 @@ class _CameraCameraState extends State<CameraCamera> {
     flashModes: widget.flashModes,
     service: CameraServiceImpl(),
     onPath: (path) => widget.onFile(path),
+
     onChangeCamera: widget.onChangeCamera,
     cameraSide: widget.cameraSide,
     enableAudio: widget.enableAudio,
