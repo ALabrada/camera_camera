@@ -21,6 +21,9 @@ class CameraCamera extends StatefulWidget {
   /// CallBack function notifies change of camera
   final ValueChanged<CameraDescription>? onChangeCamera;
 
+  /// CallBack for building the preview
+  final Widget Function(BuildContext context, Widget child)? onPreview;
+
   ///Define types of camera side is enabled
   final CameraSide cameraSide;
 
@@ -48,6 +51,7 @@ class CameraCamera extends StatefulWidget {
     this.resolutionPreset = ResolutionPreset.ultraHigh,
     required this.onFile,
     this.onChangeCamera,
+    this.onPreview,
     this.cameraSide = CameraSide.all,
     this.flashModes = FlashMode.values,
     this.mode = CameraMode.ratio16s9,
@@ -125,6 +129,7 @@ class _CameraCameraState extends State<CameraCamera> {
                         key: UniqueKey(),
                         controller: controller,
                         triggerIcon: widget.triggerIcon,
+                        onPreview: widget.onPreview,
                       ),
                       if (this.controller.status.preview.cameras.length > 1)
                         RotatedContainer(

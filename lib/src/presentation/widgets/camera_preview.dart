@@ -1,5 +1,6 @@
 import 'package:camera_camera/src/presentation/controller/camera_camera_controller.dart';
 import 'package:camera_camera/src/presentation/controller/camera_camera_status.dart';
+import 'package:camera_camera/src/presentation/widgets/resize_preview.dart';
 import 'package:camera_camera/src/presentation/widgets/rotated_container.dart';
 import 'package:camera_camera/src/shared/entities/camera_mode.dart';
 import 'package:flutter/material.dart';
@@ -8,12 +9,14 @@ import '../../../camera_camera.dart';
 
 class CameraCameraPreview extends StatefulWidget {
   final void Function(String value)? onFile;
+  final Widget Function(BuildContext context, Widget child)? onPreview;
   final CameraCameraController controller;
   final bool enableZoom;
   final Widget? triggerIcon;
   CameraCameraPreview({
     Key? key,
     this.onFile,
+    this.onPreview,
     required this.controller,
     required this.enableZoom,
     required this.triggerIcon,
@@ -38,7 +41,7 @@ class _CameraCameraPreviewState extends State<CameraCameraPreview> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final onPreview = widget.onPreview ?? (_, v) => v;
 
     return ValueListenableBuilder<CameraCameraStatus>(
       valueListenable: widget.controller.statusNotifier,
@@ -49,25 +52,14 @@ class _CameraCameraPreviewState extends State<CameraCameraPreview> {
                 },
                 child: Stack(
                   children: [
-                    if (widget.controller.cameraMode ==
-                        CameraMode.ratioFull) ...[
-                      OverflowBox(
-                          maxHeight: size.height,
-                          maxWidth:
-                              size.width * (widget.controller.aspectRatio),
-                          child: RotatedView(
-                            child: widget.controller.buildPreview()),
-                          ),
-                    ] else ...[
-                      Center(
-                        child: RotatedView(
-                          child: AspectRatio(
-                            aspectRatio: widget.controller.cameraMode.value,
-                            child: widget.controller.buildPreview(),
-                          ),
+                    Center(
+                      child: RotatedView(
+                        child: ResizePreview(
+                          size: widget.controller.previewSize!,
+                          child: onPreview(context, widget.controller.buildPreview()),
                         ),
                       ),
-                    ],
+                    ),
                     if (camera.zoom != null && widget.enableZoom)
                       RotatedContainer(
                         alignment: Alignment.bottomCenter,

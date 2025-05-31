@@ -13,12 +13,8 @@ class RotatedView extends StatelessWidget {
     if (kIsWeb) {
       return _buildContainer(context, null);
     }
-    return NativeDeviceOrientationReader(
-      builder: (context) {
-        final orientation = NativeDeviceOrientationReader.orientation(context);
-        return _buildContainer(context, turns[orientation]);
-      },
-    );
+    final orientation = NativeDeviceOrientationReader.orientation(context);
+    return _buildContainer(context, turns[orientation]);
   }
 
   Widget _buildContainer(BuildContext context, int? quarterTurns) {

@@ -35,6 +35,8 @@ class CameraCameraController {
         enableAudio: enableAudio);
   }
 
+  Size? get previewSize => _controller.value.previewSize;
+
   double get aspectRatio => _controller.value.aspectRatio;
 
   void init() async {
